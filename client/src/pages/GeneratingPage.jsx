@@ -55,12 +55,7 @@ export default function GeneratingPage({ topic, duration }) {
 
           return (
             <div key={idx} className={cardClass}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-                <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>{step.label}</span>
-                <span style={{ fontSize: '0.8rem', color: isCompleted ? 'rgba(16, 185, 129, 0.7)' : isActive ? 'var(--text-secondary)' : 'var(--text-muted)' }}>
-                  {step.desc}
-                </span>
-              </div>
+              <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>{step.label}</span>
               
               <div>
                 {isCompleted ? (
