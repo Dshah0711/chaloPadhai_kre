@@ -178,16 +178,14 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
             <div style={{ display: 'flex', gap: '8px' }}>
               <button 
                 onClick={scrollLeft}
-                className="btn-secondary"
-                style={{ padding: '8px', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                className="carousel-nav-btn"
                 title="Scroll Left"
               >
                 <ChevronLeft size={20} />
               </button>
               <button 
                 onClick={scrollRight}
-                className="btn-secondary"
-                style={{ padding: '8px', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                className="carousel-nav-btn"
                 title="Scroll Right"
               >
                 <ChevronRight size={20} />
@@ -232,21 +230,21 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
               return (
                 <div 
                   key={course._id} 
-                  className="glass-panel course-card"
+                  className="course-card"
                   onClick={() => onSelectCourse(course._id)}
                   style={{
-                    flex: '0 0 340px',
+                    flex: '0 0 360px',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    minHeight: '180px',
+                    minHeight: '200px',
                     position: 'relative'
                   }}
                 >
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
-                      <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.3' }} title={course.title}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
+                      <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.35', fontWeight: '600' }} title={course.title}>
                         {course.title}
                       </h3>
                       <button
@@ -275,12 +273,12 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
                       </button>
                     </div>
                     
-                    <div style={{ display: 'flex', gap: '16px', color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Clock size={14} /> {course.duration} Days
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                      <span className="course-meta-pill">
+                        <Clock size={12} /> {course.duration} Days
                       </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <BookOpen size={14} /> {completedCount} / {course.duration} Completed
+                      <span className="course-meta-pill">
+                        <BookOpen size={12} /> {completedCount} / {course.duration} Completed
                       </span>
                     </div>
                   </div>
