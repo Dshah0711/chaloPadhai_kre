@@ -65,7 +65,7 @@ export default function App() {
         <header className="main-header">
           <div className="logo-container">
             <GraduationCap className="logo-icon animate-pulse-glow" size={28} />
-            <span>Chalo<span className="gradient-text">Padhai</span>Kre</span>
+            <span>ChaloPadh<span className="logo-ai-highlight">Ai</span>Kre</span>
           </div>
         </header>
         <AuthPage />
@@ -79,7 +79,7 @@ export default function App() {
       <header className="main-header">
         <a href="/" className="logo-container" onClick={(e) => { e.preventDefault(); handleBackToHome(); }}>
           <GraduationCap className="logo-icon animate-pulse-glow" size={28} />
-          <span>Chalo<span className="gradient-text">Padhai</span>Kre</span>
+          <span>ChaloPadh<span className="logo-ai-highlight">Ai</span>Kre</span>
         </a>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
