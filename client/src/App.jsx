@@ -4,6 +4,7 @@ import GeneratingPage from './pages/GeneratingPage';
 import WorkspacePage from './pages/WorkspacePage';
 import AuthPage from './pages/AuthPage';
 import { useAuth } from './context/AuthContext';
+import { API_BASE_URL } from './config';
 import { GraduationCap, LogOut, User } from 'lucide-react';
 
 export default function App() {
@@ -20,7 +21,7 @@ export default function App() {
     setPage('generating');
 
     try {
-      const response = await authFetch('http://localhost:5000/api/courses', {
+      const response = await authFetch(`${API_BASE_URL}/api/courses`, {
         method: 'POST',
         body: JSON.stringify({ topic, duration }),
       });

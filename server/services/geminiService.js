@@ -9,8 +9,12 @@ const FALLBACK_MODELS = [
   'gemini-2.0-flash-lite',
   'gemini-2.5-flash-lite',
   'gemini-3.1-flash-lite',
-  'gemini-2.5-pro'
+  'gemini-1.5-flash',
+  'gemini-2.5-pro',
+  'gemini-1.5-pro'
 ];
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Helper to call model.generateContent with fallback loops for quota recovery.
@@ -52,6 +56,9 @@ async function generateContentWithFallback(prompt) {
         error.message.includes('exhausted');
 
       if (isRecoverable) {
+        // Wait a short duration before trying the next model to avoid hitting key-level rate limit thresholds
+        console.log(`[Gemini API] Recoverable error. Waiting 2 seconds before trying next model...`);
+        await sleep(2000);
         continue;
       } else {
         // Break early if it's an API Key validation issue

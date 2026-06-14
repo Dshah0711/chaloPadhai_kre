@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { GraduationCap, Mail, Lock, User, AlertCircle, RefreshCw } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, AlertCircle, RefreshCw, Eye, EyeOff } from 'lucide-react';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +9,8 @@ export default function AuthPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState('');
 
   const { login, register } = useAuth();
 
@@ -52,7 +54,7 @@ export default function AuthPage() {
         width: '350px',
         height: '350px',
         borderRadius: '50%',
-        background: 'rgba(99, 102, 241, 0.1)',
+        background: 'rgba(99, 102, 241, 0.08)',
         filter: 'blur(80px)',
         top: '10%',
         left: '15%',
@@ -63,7 +65,7 @@ export default function AuthPage() {
         width: '350px',
         height: '350px',
         borderRadius: '50%',
-        background: 'rgba(168, 85, 247, 0.1)',
+        background: 'rgba(168, 85, 247, 0.08)',
         filter: 'blur(80px)',
         bottom: '10%',
         right: '15%',
@@ -80,7 +82,7 @@ export default function AuthPage() {
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
           <div style={{ 
-            background: 'rgba(99, 102, 241, 0.15)',
+            background: 'rgba(255, 255, 255, 0.03)',
             width: '60px',
             height: '60px',
             borderRadius: '16px',
@@ -88,15 +90,15 @@ export default function AuthPage() {
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: '1rem',
-            border: '1px solid rgba(99, 102, 241, 0.25)'
+            border: '1px solid rgba(255, 255, 255, 0.08)'
           }}>
-            <GraduationCap className="logo-icon" size={32} />
+            <GraduationCap className="logo-icon animate-pulse-glow" size={32} />
           </div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px', textAlign: 'center' }}>
-            {isLogin ? 'Sign in to access your customized study dashboards' : 'Register to design and track your custom syllabi'}
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px', textAlign: 'center', lineHeight: '1.4' }}>
+            {isLogin ? 'Sign in to access your customized study dashboards' : 'Register to design and track your custom courses'}
           </p>
         </div>
 
@@ -128,22 +130,25 @@ export default function AuthPage() {
                   Name
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <User size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: 'var(--text-muted)' }} />
+                  <User size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: focusedField === 'name' ? 'var(--text-primary)' : 'var(--text-muted)', transition: 'color 0.2s' }} />
                   <input
                     id="name"
                     type="text"
                     placeholder="Your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    onFocus={() => setFocusedField('name')}
+                    onBlur={() => setFocusedField('')}
                     style={{
                       width: '100%',
                       padding: '12px 12px 12px 40px',
                       background: 'rgba(8, 12, 22, 0.6)',
-                      border: '1px solid var(--panel-border)',
+                      border: focusedField === 'name' ? '1px solid rgba(255, 255, 255, 0.4)' : '1px solid var(--panel-border)',
                       borderRadius: '10px',
                       color: 'var(--text-primary)',
                       fontSize: '0.95rem',
-                      outline: 'none'
+                      outline: 'none',
+                      transition: 'border-color 0.2s ease'
                     }}
                     required
                   />
@@ -157,22 +162,25 @@ export default function AuthPage() {
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: 'var(--text-muted)' }} />
+                <Mail size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: focusedField === 'email' ? 'var(--text-primary)' : 'var(--text-muted)', transition: 'color 0.2s' }} />
                 <input
                   id="email"
                   type="email"
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField('')}
                   style={{
                     width: '100%',
                     padding: '12px 12px 12px 40px',
                     background: 'rgba(8, 12, 22, 0.6)',
-                    border: '1px solid var(--panel-border)',
+                    border: focusedField === 'email' ? '1px solid rgba(255, 255, 255, 0.4)' : '1px solid var(--panel-border)',
                     borderRadius: '10px',
                     color: 'var(--text-primary)',
                     fontSize: '0.95rem',
-                    outline: 'none'
+                    outline: 'none',
+                    transition: 'border-color 0.2s ease'
                   }}
                   required
                 />
@@ -185,25 +193,49 @@ export default function AuthPage() {
                 Password
               </label>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: 'var(--text-muted)' }} />
+                <Lock size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: focusedField === 'password' ? 'var(--text-primary)' : 'var(--text-muted)', transition: 'color 0.2s' }} />
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Min. 6 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocusedField('password')}
+                  onBlur={() => setFocusedField('')}
                   style={{
                     width: '100%',
-                    padding: '12px 12px 12px 40px',
+                    padding: '12px 40px 12px 40px',
                     background: 'rgba(8, 12, 22, 0.6)',
-                    border: '1px solid var(--panel-border)',
+                    border: focusedField === 'password' ? '1px solid rgba(255, 255, 255, 0.4)' : '1px solid var(--panel-border)',
                     borderRadius: '10px',
                     color: 'var(--text-primary)',
                     fontSize: '0.95rem',
-                    outline: 'none'
+                    outline: 'none',
+                    transition: 'border-color 0.2s ease'
                   }}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '12px',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '4px',
+                    borderRadius: '4px'
+                  }}
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 

@@ -4,6 +4,7 @@ import {
   HelpCircle, BookOpen, ExternalLink, RefreshCw, Download 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 export default function WorkspacePage({ courseId, onBack }) {
   const [course, setCourse] = useState(null);
@@ -81,7 +82,7 @@ export default function WorkspacePage({ courseId, onBack }) {
       if (!loadedFromCache) {
         setLoading(true);
       }
-      const response = await authFetch(`http://localhost:5000/api/courses/${courseId}`);
+      const response = await authFetch(`${API_BASE_URL}/api/courses/${courseId}`);
       if (response.ok) {
         const data = await response.json();
         setCourse(data);
@@ -112,7 +113,7 @@ export default function WorkspacePage({ courseId, onBack }) {
 
   const handleToggleDay = async (dayNum, isCompleted) => {
     try {
-      const response = await authFetch(`http://localhost:5000/api/courses/${courseId}/toggle-day`, {
+      const response = await authFetch(`${API_BASE_URL}/api/courses/${courseId}/toggle-day`, {
         method: 'PUT',
         body: JSON.stringify({ day: dayNum, completed: isCompleted })
       });
@@ -131,7 +132,7 @@ export default function WorkspacePage({ courseId, onBack }) {
   const fetchQuizForDay = async (dayNum) => {
     try {
       setLoadingQuiz(true);
-      const response = await authFetch(`http://localhost:5000/api/courses/${courseId}/modules/${dayNum}/ensure-quiz`, {
+      const response = await authFetch(`${API_BASE_URL}/api/courses/${courseId}/modules/${dayNum}/ensure-quiz`, {
         method: 'POST'
       });
 
@@ -160,7 +161,7 @@ export default function WorkspacePage({ courseId, onBack }) {
   const handleGenerateMoreQuestions = async () => {
     try {
       setGeneratingMore(true);
-      const response = await authFetch(`http://localhost:5000/api/courses/${courseId}/modules/${activeDay}/more-questions`, {
+      const response = await authFetch(`${API_BASE_URL}/api/courses/${courseId}/modules/${activeDay}/more-questions`, {
         method: 'POST'
       });
 

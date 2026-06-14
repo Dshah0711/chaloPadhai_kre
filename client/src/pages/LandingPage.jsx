@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BookOpen, Clock, Calendar, ArrowRight, Library, Sparkles, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
+import { BookOpen, Clock, Calendar, ArrowRight, Library, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 
 export default function LandingPage({ onGenerate, onSelectCourse }) {
   const [topic, setTopic] = useState('');
@@ -17,7 +18,7 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
 
   const fetchCourses = async () => {
     try {
-      const response = await authFetch('http://localhost:5000/api/courses');
+      const response = await authFetch(`${API_BASE_URL}/api/courses`);
       if (response.ok) {
         const data = await response.json();
         setCourses(data);
@@ -40,7 +41,7 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
     if (!window.confirm("Are you sure you want to delete this course? This action cannot be undone.")) return;
 
     try {
-      const response = await authFetch(`http://localhost:5000/api/courses/${courseId}`, {
+      const response = await authFetch(`${API_BASE_URL}/api/courses/${courseId}`, {
         method: 'DELETE'
       });
 
@@ -74,21 +75,6 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
       {/* Hero Section */}
       <section style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <div style={{ 
-          display: 'inline-flex', 
-          alignItems: 'center', 
-          gap: '8px', 
-          background: 'rgba(255, 255, 255, 0.05)', 
-          padding: '6px 16px', 
-          borderRadius: '20px', 
-          fontSize: '0.875rem', 
-          fontWeight: '600', 
-          color: 'var(--text-secondary)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          marginBottom: '1.5rem'
-        }}>
-          <Sparkles size={14} className="animate-pulse-glow" /> Powered by Gemini LLM
-        </div>
         <h1 className="gradient-text" style={{ fontSize: '3.8rem', marginBottom: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
           Your Personal On-Demand University
         </h1>

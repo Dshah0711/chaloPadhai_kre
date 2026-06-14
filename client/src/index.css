@@ -654,3 +654,14 @@ button {
 .carousel-nav-btn:active {
   transform: scale(0.95);
 }
+
+/* Custom autofill styles to prevent browser from resetting dark inputs to light blue */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text-primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px #080c16 inset !important;
+  box-shadow: 0 0 0px 1000px #080c16 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
