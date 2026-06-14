@@ -134,22 +134,22 @@ export async function createCourse(req, res) {
 
     const modulesWithVideos = await Promise.all(videoHunterPromises);
 
-    console.log('[STAGE 3] Generating custom quizzes sequentially to prevent rate limiting...');
-    // Generate quizzes sequentially to prevent concurrent rate limits on the Gemini free tier
+    console.log('[STAGE 3] Generating custom quizzes (Day 1 only for instant loading)...');
     const enrichedModules = [];
     for (const mod of modulesWithVideos) {
-      console.log(`Generating quiz questions for Day ${mod.day}: "${mod.title}"`);
-      const quizzes = await generateQuizzesForModule(
-        syllabus.title || topic,
-        mod.title,
-        mod.description
-      );
+      let quizzes = [];
+      if (mod.day === 1) {
+        console.log(`Generating Day 1 quiz questions: "${mod.title}"`);
+        quizzes = await generateQuizzesForModule(
+          syllabus.title || topic,
+          mod.title,
+          mod.description
+        );
+      }
       enrichedModules.push({
         ...mod,
         quizzes
       });
-      // Add a small 200ms spacing delay to allow rate limit windows to breathe
-      await new Promise(resolve => setTimeout(resolve, 200));
     }
 
     // STEP 4: The Database Saver (MongoDB)
@@ -301,5 +301,50 @@ export async function deleteCourse(req, res) {
   } catch (error) {
     console.error('Error deleting course:', error);
     res.status(500).json({ error: 'Failed to delete course.' });
+  }
+}
+
+/**
+ * Lazy load / ensure quiz questions are generated for a specific day.
+ */
+export async function ensureQuiz(req, res) {
+  try {
+    const { id, day } = req.params;
+    const course = await Course.findOne({ _id: id, userId: req.user.id });
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found.' });
+    }
+
+    const dayNum = parseInt(day, 10);
+    const module = course.modules.find(m => m.day === dayNum);
+    if (!module) {
+      return res.status(404).json({ error: 'Module for this day not found.' });
+    }
+
+    // If quizzes are already generated, return them immediately
+    if (module.quizzes && module.quizzes.length > 0) {
+      return res.json({ quizzes: module.quizzes });
+    }
+
+    console.log(`[Lazy Gen] Generating initial quizzes for Course ID: ${id}, Day: ${dayNum}`);
+    const quizzes = await generateQuizzesForModule(
+      course.title,
+      module.title,
+      module.description
+    );
+
+    if (quizzes && quizzes.length > 0) {
+      module.quizzes = quizzes;
+      await course.save();
+      return res.json({ quizzes });
+    } else {
+      throw new Error('Failed to generate quizzes.');
+    }
+  } catch (error) {
+    console.error('Error ensuring quiz:', error);
+    res.status(500).json({ 
+      error: 'Failed to ensure quiz exists.', 
+      details: error.message 
+    });
   }
 }

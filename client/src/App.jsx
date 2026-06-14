@@ -52,7 +52,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '16px', background: '#080c16', color: '#fff' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '16px', background: 'var(--bg-color)', color: '#fff' }}>
         <p style={{ color: 'var(--text-secondary)' }}>Loading session...</p>
       </div>
     );
@@ -86,15 +86,15 @@ export default function App() {
           {/* User badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
             <div style={{
-              background: 'rgba(99, 102, 241, 0.1)',
-              border: '1px solid rgba(99, 102, 241, 0.2)',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               width: '32px',
               height: '32px',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--accent-primary)',
+              color: 'var(--text-primary)',
               fontWeight: 'bold'
             }}>
               {user.name.charAt(0).toUpperCase()}

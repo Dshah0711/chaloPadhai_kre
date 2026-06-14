@@ -5,7 +5,8 @@ import {
   listCourses, 
   toggleDayCompletion,
   generateMoreQuestions,
-  deleteCourse
+  deleteCourse,
+  ensureQuiz
 } from '../controllers/courseController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
@@ -28,6 +29,9 @@ router.put('/:id/toggle-day', toggleDayCompletion);
 
 // Route to generate more quiz questions for a specific day
 router.post('/:id/modules/:day/more-questions', generateMoreQuestions);
+
+// Route to lazy load / generate quizzes for a day
+router.post('/:id/modules/:day/ensure-quiz', ensureQuiz);
 
 // Route to delete a specific course
 router.delete('/:id', deleteCourse);

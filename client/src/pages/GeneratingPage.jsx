@@ -64,7 +64,7 @@ export default function GeneratingPage({ topic, duration }) {
               
               <div>
                 {isCompleted ? (
-                  <CheckCircle2 size={20} color="var(--success)" style={{ filter: 'drop-shadow(0 0 4px rgba(16,185,129,0.3))' }} />
+                  <CheckCircle2 size={20} color="var(--success)" />
                 ) : isActive ? (
                   <Loader2 size={20} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
                 ) : (

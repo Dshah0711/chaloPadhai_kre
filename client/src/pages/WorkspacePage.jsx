@@ -20,6 +20,7 @@ export default function WorkspacePage({ courseId, onBack }) {
   const [generatingMore, setGeneratingMore] = useState(false);
   const [activeVideoId, setActiveVideoId] = useState('');
   const [revealedSolutions, setRevealedSolutions] = useState({});
+  const [loadingQuiz, setLoadingQuiz] = useState(false);
 
   const { authFetch } = useAuth();
 
@@ -42,6 +43,11 @@ export default function WorkspacePage({ courseId, onBack }) {
           setActiveVideoId(activeMod.topics[0].videoId);
         } else {
           setActiveVideoId(activeMod.videoId || '');
+        }
+
+        // Lazy load quizzes if empty
+        if (!activeMod.quizzes || activeMod.quizzes.length === 0) {
+          fetchQuizForDay(activeDay);
         }
       }
     }
@@ -119,6 +125,35 @@ export default function WorkspacePage({ courseId, onBack }) {
       }
     } catch (err) {
       console.error('Error toggling completion status:', err);
+    }
+  };
+
+  const fetchQuizForDay = async (dayNum) => {
+    try {
+      setLoadingQuiz(true);
+      const response = await authFetch(`http://localhost:5000/api/courses/${courseId}/modules/${dayNum}/ensure-quiz`, {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        const { quizzes } = await response.json();
+        setCourse(prev => {
+          if (!prev) return prev;
+          const updatedModules = prev.modules.map(m => {
+            if (m.day === dayNum) {
+              return { ...m, quizzes };
+            }
+            return m;
+          });
+          const updated = { ...prev, modules: updatedModules };
+          localStorage.setItem(`ai_course_cache_${courseId}`, JSON.stringify(updated));
+          return updated;
+        });
+      }
+    } catch (err) {
+      console.error('Failed to lazy load quiz:', err);
+    } finally {
+      setLoadingQuiz(false);
     }
   };
 
@@ -407,7 +442,7 @@ export default function WorkspacePage({ courseId, onBack }) {
       <div className="workspace-center">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: '800', background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', padding: '4px 10px', borderRadius: '6px' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: '800', background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-secondary)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
               DAY {activeDay} OF {course.duration}
             </span>
           </div>
@@ -522,12 +557,12 @@ export default function WorkspacePage({ courseId, onBack }) {
             style={{
               flex: 1,
               padding: '10px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               fontWeight: '600',
               fontSize: '0.85rem',
-              background: activeTab === 'quiz' ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
+              background: activeTab === 'quiz' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
               color: activeTab === 'quiz' ? 'var(--text-primary)' : 'var(--text-secondary)',
-              border: activeTab === 'quiz' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
+              border: activeTab === 'quiz' ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid transparent',
             }}
           >
             Interactive Quiz
@@ -537,12 +572,12 @@ export default function WorkspacePage({ courseId, onBack }) {
             style={{
               flex: 1,
               padding: '10px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               fontWeight: '600',
               fontSize: '0.85rem',
-              background: activeTab === 'assignment' ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
+              background: activeTab === 'assignment' ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
               color: activeTab === 'assignment' ? 'var(--text-primary)' : 'var(--text-secondary)',
-              border: activeTab === 'assignment' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent',
+              border: activeTab === 'assignment' ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid transparent',
             }}
           >
             Practice Assignment
@@ -555,7 +590,12 @@ export default function WorkspacePage({ courseId, onBack }) {
               <HelpCircle size={16} color="var(--accent-primary)" /> Day {activeDay} Quiz
             </h2>
 
-            {!activeModule.quizzes || activeModule.quizzes.length === 0 ? (
+            {loadingQuiz ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 0', gap: '12px' }}>
+                <RefreshCw className="animate-spin" size={24} color="var(--accent-primary)" style={{ animation: 'spin 1.5s linear infinite' }} />
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Generating Day {activeDay} Quiz...</p>
+              </div>
+            ) : !activeModule.quizzes || activeModule.quizzes.length === 0 ? (
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>No quiz generated for this day.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -667,7 +707,7 @@ export default function WorkspacePage({ courseId, onBack }) {
                         <button 
                           onClick={handleGenerateMoreQuestions}
                           className="btn-primary"
-                          style={{ flex: 1, fontSize: '0.8rem', padding: '8px 12px', background: 'rgba(99, 102, 241, 0.2)', border: '1px solid var(--accent-primary)' }}
+                          style={{ flex: 1, fontSize: '0.8rem', padding: '8px 12px', background: '#ffffff', color: '#000000', border: '1px solid #ffffff' }}
                           disabled={generatingMore}
                         >
                           {generatingMore ? 'Generating...' : 'Learn More (Add Questions)'}
@@ -714,7 +754,7 @@ export default function WorkspacePage({ courseId, onBack }) {
                   padding: '6px 12px',
                   fontSize: '0.8rem',
                   borderRadius: '8px',
-                  borderColor: 'rgba(99, 102, 241, 0.3)',
+                  borderColor: 'var(--panel-border)',
                   color: 'var(--text-primary)'
                 }}
               >

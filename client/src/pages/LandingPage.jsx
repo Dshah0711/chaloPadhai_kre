@@ -78,19 +78,19 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
           display: 'inline-flex', 
           alignItems: 'center', 
           gap: '8px', 
-          background: 'rgba(99, 102, 241, 0.1)', 
+          background: 'rgba(255, 255, 255, 0.05)', 
           padding: '6px 16px', 
           borderRadius: '20px', 
           fontSize: '0.875rem', 
           fontWeight: '600', 
-          color: '#818cf8',
-          border: '1px solid rgba(99, 102, 241, 0.2)',
+          color: 'var(--text-secondary)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           marginBottom: '1.5rem'
         }}>
           <Sparkles size={14} className="animate-pulse-glow" /> Powered by Gemini LLM
         </div>
-        <h1 style={{ fontSize: '3.5rem', marginBottom: '1rem', fontWeight: 800 }}>
-          Your Personal <span className="gradient-text">On-Demand</span> University
+        <h1 className="gradient-text" style={{ fontSize: '3.8rem', marginBottom: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
+          Your Personal On-Demand University
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
           Stop browsing YouTube manually and dealing with distractions. Type what you want to learn, set your timeframe, and get a completely structured, quiz-enabled course in seconds.
@@ -115,15 +115,15 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
                 style={{
                   width: '100%',
                   padding: '16px',
-                  borderRadius: '12px',
-                  background: 'rgba(8, 12, 22, 0.6)',
+                  borderRadius: '8px',
+                  background: '#0c0c0c',
                   border: '1px solid var(--panel-border)',
                   color: 'var(--text-primary)',
                   fontSize: '1rem',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                 }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'}
+                onFocus={(e) => e.target.style.borderColor = 'var(--panel-border-hover)'}
                 onBlur={(e) => e.target.style.borderColor = 'var(--panel-border)'}
                 required
               />
@@ -141,8 +141,8 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
                 style={{
                   width: '100%',
                   padding: '16px',
-                  borderRadius: '12px',
-                  background: 'rgba(8, 12, 22, 0.6)',
+                  borderRadius: '8px',
+                  background: '#0c0c0c',
                   border: '1px solid var(--panel-border)',
                   color: 'var(--text-primary)',
                   fontSize: '1rem',
@@ -168,7 +168,7 @@ export default function LandingPage({ onGenerate, onSelectCourse }) {
       </section>
 
       {/* Previously Generated Courses catalog */}
-      <section style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '3rem', position: 'relative' }}>
+      <section style={{ borderTop: '1px solid var(--panel-border)', paddingTop: '3rem', position: 'relative' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h2 style={{ fontSize: '1.75rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '10px', margin: 0 }}>
             <Library className="logo-icon" size={24} /> Previous Courses
