@@ -12,8 +12,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+const clientOrigin = process.env.CLIENT_URL 
+  ? process.env.CLIENT_URL.replace(/\/$/, '') 
+  : true;
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL ? process.env.CLIENT_URL : true,
+  origin: clientOrigin,
   credentials: true
 };
 app.use(cors(corsOptions));
